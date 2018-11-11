@@ -1,0 +1,54 @@
+{
+  "variables": {
+    "do_token": ""
+  },
+  "builders": [
+    {
+      "droplet_name": "vault",
+      "snapshot_name": "vault",
+      "type": "digitalocean",
+      "ssh_username": "root",
+      "api_token": "{{ user `do_token` }}",
+      "image": "ubuntu-18-04-x64",
+      "region": "lon1",
+      "size": "1gb"
+    }
+  ],
+  "provisioners": [
+  {
+    "type": "shell",
+    "inline": [
+      "mkdir -p /home/ubuntu"
+    ]
+  },
+  {
+    "type": "shell",
+    "script": "files/apt.sh"
+  },
+  {
+    "type": "shell",
+    "script": "files/certbot.sh"
+  },
+  {
+      "destination": "/home/ubuntu/vault.hcl",
+      "source": "files/vault.hcl",
+      "type": "file"
+  }, 
+  {
+    "destination": "/home/ubuntu/vault.service",
+    "source": "files/vault.service",
+    "type": "file"
+  }, 
+  {
+      "type": "shell",
+      "inline": [
+        "sudo mv /home/ubuntu/vault.hcl /etc/vault.hcl",
+        "sudo mv /home/ubuntu/vault.service /etc/systemd/system/vault.service"
+      ]
+  },
+  {
+      "type": "shell",
+      "script": "files/vault.sh"
+  }
+  ]
+}
