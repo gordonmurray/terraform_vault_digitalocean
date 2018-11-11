@@ -27,6 +27,10 @@
   },
   {
     "type": "shell",
+    "script": "files/do_monitoring.sh"
+  },
+  {
+    "type": "shell",
     "script": "files/certbot.sh"
   },
   {
